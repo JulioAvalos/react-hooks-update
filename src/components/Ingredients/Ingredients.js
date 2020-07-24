@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import IngredientForm from './IngredientForm';
 import IngredientList from './IngredientList';
@@ -6,32 +6,16 @@ import Search from './Search';
 
 const Ingredients = () => {
   const [ userIngredinets, setUserIngredients ] = useState([]);
-
-  useEffect(() => {
-    fetch('https://toma-pedido-cae71.firebaseio.com/ingredients.json')
-    .then(response => response.json())
-    .then(responseData => {
-      const loadedIngredients = [];
-      for(const key in responseData){
-        loadedIngredients.push({
-          id: key,
-          title: responseData[key].title,
-          amount: responseData[key].amount
-        });
-      }
-      setUserIngredients(loadedIngredients);
-    });
-  }, []); // when an empty array is the second arguments, 
-  // useEffect is like componentDidMount() (it only renders once!)
-
+  
   useEffect(()=> {
     console.log('RENDERING INGREDIENTS', userIngredinets);
   },[userIngredinets]);
 
-
-  const filteredIngredientsHandler = filteredIngredients => {
+  //useCallback() caches this function so it survives render cycles, 
+  //so this function is not recreated/doesnt change
+  const filteredIngredientsHandler = useCallback(filteredIngredients => {
     setUserIngredients(filteredIngredients);
-  }
+  }, []);
 
   const addIngredientHandler = ingredient => {
     fetch('https://toma-pedido-cae71.firebaseio.com/ingredients.json', {
