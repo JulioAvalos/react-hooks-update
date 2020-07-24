@@ -28,6 +28,11 @@ const Ingredients = () => {
     console.log('RENDERING INGREDIENTS', userIngredinets);
   },[userIngredinets]);
 
+
+  const filteredIngredientsHandler = filteredIngredients => {
+    setUserIngredients(filteredIngredients);
+  }
+
   const addIngredientHandler = ingredient => {
     fetch('https://toma-pedido-cae71.firebaseio.com/ingredients.json', {
       method: 'POST',
@@ -58,7 +63,7 @@ const Ingredients = () => {
       <IngredientForm onAddIngredient={addIngredientHandler}/>
 
       <section>
-        <Search />
+        <Search onLoadIngredients={filteredIngredientsHandler}/>
         <IngredientList 
           ingredients={userIngredinets} 
           onRemoveItem={removeIngredientHandler}
