@@ -24,6 +24,10 @@ const Ingredients = () => {
   }, []); // when an empty array is the second arguments, 
   // useEffect is like componentDidMount() (it only renders once!)
 
+  useEffect(()=> {
+    console.log('RENDERING INGREDIENTS', userIngredinets);
+  },[userIngredinets]);
+
   const addIngredientHandler = ingredient => {
     fetch('https://toma-pedido-cae71.firebaseio.com/ingredients.json', {
       method: 'POST',
