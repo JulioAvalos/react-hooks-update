@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import IngredientForm from './IngredientForm';
 import IngredientList from './IngredientList';
@@ -6,6 +6,23 @@ import Search from './Search';
 
 const Ingredients = () => {
   const [ userIngredinets, setUserIngredients ] = useState([]);
+
+  useEffect(() => {
+    fetch('https://toma-pedido-cae71.firebaseio.com/ingredients.json')
+    .then(response => response.json())
+    .then(responseData => {
+      const loadedIngredients = [];
+      for(const key in responseData){
+        loadedIngredients.push({
+          id: key,
+          title: responseData[key].title,
+          amount: responseData[key].amount
+        });
+      }
+      setUserIngredients(loadedIngredients);
+    });
+  }, []); // when an empty array is the second arguments, 
+  // useEffect is like componentDidMount() (it only renders once!)
 
   const addIngredientHandler = ingredient => {
     fetch('https://toma-pedido-cae71.firebaseio.com/ingredients.json', {
