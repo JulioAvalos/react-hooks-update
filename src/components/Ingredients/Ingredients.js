@@ -27,12 +27,9 @@ const Ingredients = () => {
     data, 
     sendRequest, 
     reqExtra, 
-    reqIdentifier 
+    reqIdentifier,
+    clear
   } = useHttp();
-  
-  // const [userIngredinets, setUserIngredients] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState();
   
   useEffect(()=> {
     if(!isLoading && !error && reqIdentifier === 'REMOVE_INGREDIENT') {
@@ -43,12 +40,9 @@ const Ingredients = () => {
         ingredient: { id: data.name, ...reqExtra }
       });
     }
-  },[data, reqExtra, reqIdentifier, isLoading]);
+  },[data, reqExtra, reqIdentifier, isLoading, error]);
 
-  //useCallback() caches this function so it survives render cycles, 
-  //so this function is not recreated/doesnt change
   const filteredIngredientsHandler = useCallback(filteredIngredients => {
-    // setUserIngredients(filteredIngredients);
     dispatch({type: 'SET', ingredients: filteredIngredients});
   }, []);
 
@@ -60,23 +54,6 @@ const Ingredients = () => {
       ingredient,
       'ADD_INGREDIENT'
     );
-    // dispatchHttp({type: 'SEND'});
-    // fetch('https://toma-pedido-cae71.firebaseio.com/ingredients.json', {
-    //   method: 'POST',
-    //   body: JSON.stringify(ingredient),
-    //   headers: { 'Content-Type': 'application/json' }
-    // })
-    // .then(response => {
-    //   dispatchHttp({type: 'RESPONSE'});
-    //   return response.json();
-    // })
-    // .then(responseData => {
-    //   // setUserIngredients(prevIngredients => [
-    //   //   ...prevIngredients, 
-    //   //   { id: responseData.name, ...ingredient }
-    //   // ]);
-    //   dispatch({type: 'ADD', ingredient: { id: responseData.name, ...ingredient }});
-    // });
   }, [sendRequest]);
 
   const removeIngredientHandler = useCallback(ingredientId => {
@@ -88,10 +65,6 @@ const Ingredients = () => {
       'REMOVE_INGREDIENT'
     );
   }, [sendRequest]);
-
-  const clearError = useCallback(() => {
-    // dispatchHttp({type: 'CLEAR'});
-  }, []);
 
   const ingredientList = useMemo(() => {
     return (
@@ -105,7 +78,7 @@ const Ingredients = () => {
   return (
     <div className="App">
       {error && (
-        <ErrorModal onClose={clearError}>{error}</ErrorModal>
+        <ErrorModal onClose={clear}>{error}</ErrorModal>
       )}
 
       <IngredientForm 
